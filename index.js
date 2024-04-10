@@ -6,8 +6,16 @@ function setup() {
   createCanvas(400, 400)
 
   let c1 = new Circle(-1 / 200, 200, 200)
-  let c2 = new Circle(1 / 100, 100, 200)
-  let c3 = new Circle(1 / 100, 300, 200)
+  let r2 = random(20, c1.radius / 2)
+
+  let v = p5.Vector.random2D()
+  v.setMag(c1.radius - r2)
+  let c2 = new Circle(1 / r2, 200 + v.x, 200 + v.y)
+
+  let r3 = v.mag()
+  v.rotate(PI)
+  v.setMag(c1.radius - r3)
+  let c3 = new Circle(1 / r3, 200 + v.x, 200 + v.y)
 
   allCircles = [c1, c2, c3]
   queue = [[c1, c2, c3]]
