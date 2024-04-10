@@ -3,19 +3,19 @@ let queue = []
 const epsilon = 0.1
 
 function setup() {
-  createCanvas(400, 400)
+  createCanvas(800, 800)
 
-  let c1 = new Circle(-1 / 200, 200, 200)
-  let r2 = random(20, c1.radius / 2)
+  let c1 = new Circle(-1 / (width / 3), width / 2, height / 2)
+  let r2 = random(100, c1.radius / 2)
 
-  let v = p5.Vector.random2D()
+  let v = p5.Vector.fromAngle(random(TWO_PI))
   v.setMag(c1.radius - r2)
-  let c2 = new Circle(1 / r2, 200 + v.x, 200 + v.y)
+  let c2 = new Circle(1 / r2, width / 2 + v.x, height / 2 + v.y)
 
   let r3 = v.mag()
   v.rotate(PI)
   v.setMag(c1.radius - r3)
-  let c3 = new Circle(1 / r3, 200 + v.x, 200 + v.y)
+  let c3 = new Circle(1 / r3, width / 2 + v.x, height / 2 + v.y)
 
   allCircles = [c1, c2, c3]
   queue = [[c1, c2, c3]]
@@ -57,7 +57,7 @@ function descartes(c1, c2, c3) {
   const k3 = c3.bend
 
   const sum = k1 + k2 + k3
-  const root = 2 * sqrt(k1 * k2 + k2 * k3 + k3 * k1)
+  const root = 2 * sqrt(abs(k1 * k2 + k2 * k3 + k3 * k1))
 
   return [sum + root, sum - root]
 }
