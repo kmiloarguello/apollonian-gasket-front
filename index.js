@@ -55,9 +55,11 @@ function descartes(c1, c2, c3) {
 }
 
 function validate(c4, c1, c2, c3) {
+  if (c4.radius < 2) return false
   for (let other of allCircles) {
     let d = c4.dist(other)
-    if (d < 0.1) {
+    let radiusDiff = abs(c4.radius - other.radius)
+    if (d < epsilon && radiusDiff < epsilon) {
       return false
     }
   }
