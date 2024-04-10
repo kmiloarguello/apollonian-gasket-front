@@ -9,4 +9,7 @@ class Circle {
     noFill()
     circle(this.center.a, this.center.b, this.radius * 2)
   }
+  dist(other) {
+    return dist(this.center.a, this.center.b, other.center.a, other.center.b)
+  }
 }

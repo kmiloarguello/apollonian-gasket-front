@@ -1,12 +1,13 @@
 let allCircles = []
 let queue = []
+const epsilon = 0.1
 
 function setup() {
-  createCanvas(800, 800)
+  createCanvas(400, 400)
 
-  let c1 = new Circle(-1 / 400, 400, 400)
-  let c2 = new Circle(1 / 200, 200, 400)
-  let c3 = new Circle(1 / 200, 600, 400)
+  let c1 = new Circle(-1 / 200, 200, 200)
+  let c2 = new Circle(1 / 100, 100, 200)
+  let c3 = new Circle(1 / 100, 300, 200)
 
   allCircles = [c1, c2, c3]
   queue = [[c1, c2, c3]]
@@ -25,14 +26,18 @@ function mousePressed() {
   for (let triplet of queue) {
     let [c1, c2, c3] = triplet
     let k4 = descartes(c1, c2, c3)
-    let r4 = abs(1 / k4[1])
     let newCircles = complexDescartes(c1, c2, c3, k4)
-    allCircles.push(newCircles[0])
-    let newTriplet1 = [c1, c2, newCircles[0]]
-    let newTriplet2 = [c1, c3, newCircles[0]]
-    let newTriplet3 = [c2, c3, newCircles[0]]
 
-    newQueue = newQueue.concat([newTriplet1, newTriplet2, newTriplet3])
+    for (let newCirlce of newCircles) {
+      if (validate(newCirlce, c1, c2, c3)) {
+        allCircles.push(newCirlce)
+        let t1 = [c1, c2, newCirlce]
+        let t2 = [c1, c3, newCirlce]
+        let t3 = [c2, c3, newCirlce]
+
+        newQueue = newQueue.concat([t1, t2, t3])
+      }
+    }
   }
 
   queue = newQueue
@@ -47,6 +52,29 @@ function descartes(c1, c2, c3) {
   const root = 2 * sqrt(k1 * k2 + k2 * k3 + k3 * k1)
 
   return [sum + root, sum - root]
+}
+
+function validate(c4, c1, c2, c3) {
+  for (let other of allCircles) {
+    let d = c4.dist(other)
+    if (d < 0.1) {
+      return false
+    }
+  }
+
+  if (!isTangent(c4, c1)) return false
+  if (!isTangent(c4, c2)) return false
+  if (!isTangent(c4, c3)) return false
+
+  return true
+}
+
+function isTangent(c1, c2) {
+  let d = c1.dist(c2)
+  let r1 = c1.radius
+  let r2 = c2.radius
+
+  return abs(d - (r1 + r2)) < epsilon || d - abs(r2 - r1) < epsilon
 }
 
 function complexDescartes(c1, c2, c3, k4) {
