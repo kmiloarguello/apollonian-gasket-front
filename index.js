@@ -1,28 +1,41 @@
-let c1, c2, c3
+let allCircles = []
+let queue = []
 
 function setup() {
-  createCanvas(400, 400)
+  createCanvas(800, 800)
 
-  c1 = new Circle(-1 / 200, 200, 200)
-  c2 = new Circle(1 / 100, 100, 200)
-  c3 = new Circle(1 / 100, 300, 200)
+  let c1 = new Circle(-1 / 400, 400, 400)
+  let c2 = new Circle(1 / 200, 200, 400)
+  let c3 = new Circle(1 / 200, 600, 400)
+
+  allCircles = [c1, c2, c3]
+  queue = [[c1, c2, c3]]
 }
 
 function draw() {
   background(255)
 
-  c1.show()
-  c2.show()
-  c3.show()
+  for (let c of allCircles) {
+    c.show()
+  }
+}
 
-  let k4 = descartes(c1, c2, c3)
-  let r4 = abs(1 / k4[0])
+function mousePressed() {
+  let newQueue = []
+  for (let triplet of queue) {
+    let [c1, c2, c3] = triplet
+    let k4 = descartes(c1, c2, c3)
+    let r4 = abs(1 / k4[1])
+    let newCircles = complexDescartes(c1, c2, c3, k4)
+    allCircles.push(newCircles[0])
+    let newTriplet1 = [c1, c2, newCircles[0]]
+    let newTriplet2 = [c1, c3, newCircles[0]]
+    let newTriplet3 = [c2, c3, newCircles[0]]
 
-  let allCircles = complexDescartes(c1, c2, c3, k4)
-  allCircles[0].show()
-  allCircles[1].show()
+    newQueue = newQueue.concat([newTriplet1, newTriplet2, newTriplet3])
+  }
 
-  noLoop()
+  queue = newQueue
 }
 
 function descartes(c1, c2, c3) {
