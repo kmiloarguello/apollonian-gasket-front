@@ -24,12 +24,14 @@ function setup() {
 function draw() {
   background(255)
 
+  nextGeneration()
+
   for (let c of allCircles) {
     c.show()
   }
 }
 
-function mousePressed() {
+function nextGeneration() {
   let newQueue = []
   for (let triplet of queue) {
     let [c1, c2, c3] = triplet
